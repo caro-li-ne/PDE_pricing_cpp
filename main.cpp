@@ -14,7 +14,7 @@ int main() {
     double sigma = 0.15; // Volatility
     double r = 0.03; // Risk-free interest rate
     double lambda = 3.0; // Multiplier for space grid boundaries
-    double strike = 40.0; // Strike price
+    double strike = 60.0; // Strike price
     double S_0 = 70; // Current stock price 
     double q = 0; // Dividend yield
     double theta = 0.5;
