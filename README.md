@@ -37,7 +37,7 @@ PDEpricer::setTerminalCondition()
 PDEpricer::computeMatrices()
 ```
 
-*Finite difference call option pricing*: uses **Crank-Nicholson** scheme to build the whole final prices grid backwards in time, and an extraction function to isolate the price corresponding to our input level of spot.
+*Finite difference call option pricing*: uses **Crank-Nicholson** scheme to build the whole final prices grid backwards in time.
 
 ```cpp
 PDEpricer::solve()
