@@ -1,5 +1,5 @@
-#include "PDE2.h"
-#include "Matrix2.h"
+#include "PDE.h"
+#include "Matrix.h"
 #include <iostream>
 #include <vector>
 #include <cmath>
