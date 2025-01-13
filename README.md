@@ -3,7 +3,7 @@
 The aim of this project is to build a pricer of vanilla option from the PDE of the derivatives payoff. Key implementations include matrix inversion algorithm and Crank-Nicholson scheme resolution. Comments are written along the way. *(last update: Jan 13th)*
 
 
-*Matrix inversion*: uses the **Gauss-Jordan** pivot algorithm to find the inverse of a matrix through its augmented form. Checks for legality of inversion *(matrix is squared and determinant is not zero)*. In case of non invertibility, epsilon added to make inversion possible.
+*Matrix inversion*: uses the **Gauss** pivot algorithm to find the inverse of a matrix. Checks for legality of inversion *(matrix is squared and determinant is not zero)*. In case of non invertibility, epsilon added to make inversion possible.
 
 ```cpp
 matrix::inverse()
@@ -15,7 +15,7 @@ matrix::inverse()
 matrix::computeDeterminantGaussian()
 ```
 
-*Theoretical call option pricing*: uses **Black-Scholes** formula with dividends and repo to compute the price of a vanilla call option. Used to study the convergence of a price obtained through finite difference.
+*Theoretical call option pricing*: uses **Black-Scholes** formula to compute the price of a vanilla call option. Used to study the convergence of a price obtained through finite difference.
 
 ```cpp
 blackScholesCall()
