@@ -24,7 +24,6 @@ double dt = maturity / timeSteps;
 // Compute forward price
     double F_0_T = S_0 * exp((r - q) * maturity);
 
-
 // Print forward price
 std::cout << "Forward Price F_0_T: " << F_0_T << std::endl;
 
@@ -41,7 +40,6 @@ if (dt > stability_criterion) {
     std::cerr << "Warning: Time step size exceeds stability limit!" <<dt<<stability_criterion<< std::endl;
 }
 
-
 std::cout << "Initializing PDEPricer..." << std::endl;
 
 PDEPricer pricer(S_0, maturity, strike, timeSteps, spaceSteps, sigma, r, lambda, theta);
@@ -54,8 +52,7 @@ for (int j = 0; j < spaceSteps; ++j) {
 }
 
 // Boundary conditions
-std::vector<double> boundaryLow(timeSteps); // At S = -lambda*sigma, u(t, S_min) = 0
-// Adjust high boundary condition
+std::vector<double> boundaryLow(timeSteps); 
 std::vector<double> boundaryHigh(timeSteps);
 
 for (int i = 0; i < timeSteps; ++i) {
@@ -66,7 +63,6 @@ for (int i = 0; i < timeSteps; ++i) {
     boundaryLow[i] = S_min; // At S = -lambda*sigma, u(t, S_min) = 0
 
     double S_max = S_0 * exp(spaceGrid.back());
-    //S_max = std::min(S_max, 2 * strike);
     boundaryHigh[i] = S_max - strike * exp(- r * (maturity - t));
     }
 
@@ -75,17 +71,17 @@ std::cout << "Setting boundary and terminal conditions..." << std::endl;
 pricer.setBoundaryConditions(boundaryLow, boundaryHigh);
 pricer.setTerminalCondition(terminal);
 
+// Compute Matrix P and Q 
 std::cout << "Computing matrices..." << std::endl;
 pricer.computeMatrices();
 
-
+// Solving PDE backwards
 std::cout << "Solving PDE..." << std::endl;
 Matrix prices(spaceSteps,1);
 prices = pricer.solve();
 
-// Compare with Black-Scholes price at S_0 = 50.0
+// Compute with Black-Scholes price at S_0 = 50.0
 double bsPrice = blackScholesCall(S_0, strike, r, sigma, maturity);
-
 
 // Interpolate PDE price at S0, calculated grid index may not align perfectly with S0=50 due to discretisation, 
 //this mismatch could lead to the PDE price being evaluated at a point far from S0.
@@ -97,17 +93,7 @@ double S_right = exp(spaceGrid[idx]) * S_0;
 double price = prices.at(idx - 1,0) + (prices.at(idx,0) - prices.at(idx - 1,0)) * (S_0 - S_left) / (S_right - S_left);
 
 std::cout << "Interpolated PDE Price at S0: " << price <<std::endl;
+std::cout << "Black-Scholes Price: " << bsPrice << std::endl;
 
-   // std::cout << "PDE Price at S0: " << prices[spaceSteps / 4] << std::endl;
-    std::cout << "Black-Scholes Price: " << bsPrice << std::endl;
-
-/*
-for (int j = 0; j < spaceSteps; ++j) {
-    double S = exp(spaceGrid[j]) * S_0;
-    std::cout << "Grid Point x[" << j << "] = " << spaceGrid[j] 
-              << ", S = " << S 
-              << ", U = " << prices.at(j,0) << std::endl;
-}*/
-
-    return 0;
+return 0;
 }
