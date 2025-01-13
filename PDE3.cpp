@@ -24,7 +24,6 @@ PDEPricer::PDEPricer(double S0, double maturity, double K, int timeSteps, int sp
     // Initialize matrices P and Q
     P = Matrix(spaceSteps - 1, spaceSteps - 1);
     Q = Matrix(spaceSteps - 1, spaceSteps - 1);
-    
     V = Matrix(spaceSteps - 1, 1);
 
     computeA();
@@ -54,12 +53,7 @@ void PDEPricer::computeD() {
 }
 
 void PDEPricer::computeMatrices() {
-    for (int j = 0; j < spaceSteps - 1; ++j) {
-        double a = A[j];
-        double b = B[j];
-        double c = C[j];
-        double d = D[j];
-       
+    for (int j = 0; j < spaceSteps - 1; ++j) {       
         if (j > 0) {
             P.at(j, j - 1) = - 0.5 * B[j] / dx + theta * C[j] / (dx * dx);
             Q.at(j, j - 1) = (1.0 - theta) * C[j] / (dx * dx);
@@ -70,19 +64,7 @@ void PDEPricer::computeMatrices() {
 
         if (j < spaceSteps - 2) {
             P.at(j, j + 1) = 0.5 * B[j] / dx + theta * C[j] / (dx * dx);
-            Q.at(j, j + 1) = (1.0 - theta) * C[j] / (dx * dx);
-
-      /*  V.at(j,0) = D[j] ; 
-
-        if (j==0){  // Compute V including boundary conditions
-        V.at(j,0) += (- 0.5 * B[0] / dx + theta * C[0] / (dx * dx)) * boundaryLow[n] + (1 - theta) * C[0] / (dx * dx) * boundaryLow[n + 1];
-        }
-        if (j==spaceSteps-2){
-        V.at(j, 0) += (0.5 * B[spaceSteps - 2] / dx + theta * C[spaceSteps - 2] / (dx * dx)) * boundaryHigh[n] 
-        + (1 - theta) * C[spaceSteps - 2] / (dx * dx) *  boundaryHigh[n + 1] ;
- 
-        }*/
-        
+            Q.at(j, j + 1) = (1.0 - theta) * C[j] / (dx * dx);        
     }
 }}
 
@@ -98,15 +80,12 @@ Matrix PDEPricer::solve() {
     Matrix P_inv = P.inverse();
 
     for (int n = timeSteps - 2; n > 0; --n) {
-        //std::cout << "Boundary at left: " << boundaryLow[n] << std::endl;
-    //std::cout << "Boundary at right: " << boundaryHigh[n] << std::endl;
-
-        //std::cout<<boundaryHigh[n]<<std::endl;
         U_prev_0=U_first_0;
         U_prev_m=U_first_m;
         U_first_0=boundaryLow[n];
         U_first_m=boundaryHigh[n];
-        
+
+        // Compute V
         for (int j = 0; j < spaceSteps - 1; ++j) {
             V.at(j,0) = D[j] ; 
             if (j==0){  // Compute V including boundary conditions
@@ -117,35 +96,14 @@ Matrix PDEPricer::solve() {
             + (1 - theta) * C[spaceSteps - 2] / (dx * dx) *  U_prev_m ;
             }}
 
-        Matrix temp(spaceSteps - 1, 1);
-        for (int i=0;i < spaceSteps - 1;++i){
-            temp.at(i,0) = - 1.0;
-        }
+        //Compute the new U
         Matrix product(spaceSteps - 1,spaceSteps - 1);
         product = P_inv *(Q * U + V); // Assuming Q * U is valid
-    
-        /*for (size_t i = 0; i < temp.size(); ++i) {
-            temp[i] = product[i] + V[i]; // Element-wise addition
-        }
 
-        std::transform(temp.begin(), temp.end(), temp.begin(), [](int x) {
-            return x * -1.0; // Multiply each element by -1
-        });
-        U=temp;*/
-        /*for (size_t i = 0; i < temp.size(); ++i) {
-            temp[i] = product[i] + V[i]; // Element-wise addition
-        }
-
-        std::vector<double> H(spaceSteps - 1);
-        H = P_inv * temp; // Matrix-vector multiplication
-    */
-        std::vector<double> negatif(spaceSteps - 1,- 1.0);
         for (size_t i = 0; i < spaceSteps - 1; ++i) {
             U.at(i,0) = -1.0 * product.at(i,0);
             }
     }
-
-
     return U;
 }
 
