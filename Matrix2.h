@@ -10,7 +10,6 @@ class Matrix {
 private:
     vector<vector<double>> mat;
     int rows, cols;
-
     double cachedDeterminant = 0.0;
     bool determinantComputed = false;
 
@@ -215,21 +214,7 @@ vector<vector<double>> adjoint() {
 
     return adj;
 }
-/*
-    // Overloaded * operator for matrix-vector multiplication
-    std::vector<double> operator*(const std::vector<double>& vec) const {
-        if (vec.size() != cols) {
-            throw std::runtime_error("Matrix and vector size mismatch for multiplication.");
-        }
 
-        std::vector<double> result(rows, 0.0);
-        for (int i = 0; i < rows; ++i) {
-            for (int j = 0; j < cols; ++j) {
-                result[i] += mat[i][j] * vec[j];
-            }
-        }
-        return result;
-    }*/
    Matrix operator*(const Matrix& other) const {
         if (cols != other.rows) {
             throw std::runtime_error("Matrix size mismatch for addition.");
