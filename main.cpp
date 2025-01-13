@@ -37,7 +37,7 @@ for (int j = 0; j < spaceSteps; ++j) {
 double dx2 = spaceGrid[1] - spaceGrid[0];
 double stability_criterion = dx2 * dx2 / (sigma * sigma);
 if (dt > stability_criterion) {
-    std::cerr << "Warning: Time step size exceeds stability limit!" <<dt<<stability_criterion<< std::endl;
+    std::cerr << "Warning: Time step size exceeds stability limit!" << std::endl;
 }
 
 std::cout << "Initializing PDEPricer..." << std::endl;
