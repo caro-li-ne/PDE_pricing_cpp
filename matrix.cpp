@@ -1,7 +1,7 @@
 #include "Matrix.h"
 
 // Constructor
-Matrix::Matrix(int rows, int cols) : mat(rows, std::vector<double>(cols, 0.0)), rows(rows), cols(cols) {}
+Matrix::Matrix(int rows, int cols) : mat(rows, vector<double>(cols, 0.0)), rows(rows), cols(cols) {}
 
 // Getters
 int Matrix::getRows() const {
@@ -14,14 +14,14 @@ int Matrix::getCols() const {
 // Access elements
 double& Matrix::at(int row, int col) {
     if (row < 0 || row >= rows || col < 0 || col >= cols) {
-        throw std::out_of_range("Matrix indices out of bounds");
+        throw out_of_range("Matrix indices out of bounds");
     }
     return mat[row][col];
 }
 
 const double& Matrix::at(int row, int col) const {
     if (row < 0 || row >= rows || col < 0 || col >= cols) {
-        throw std::out_of_range("Matrix indices out of bounds");
+        throw out_of_range("Matrix indices out of bounds");
     }
     return mat[row][col];
 }
@@ -39,19 +39,19 @@ void Matrix::input() {
 // Check if invertible
 bool Matrix::isInvertible() {
     double epsilon = 1e-8;
-    cout << "Determinant : " << determinant() << std::endl;
-    return std::abs(determinant()) > epsilon;
+    cout << "Determinant : " << determinant() << endl;
+    return abs(determinant()) > epsilon;
 }
 
 // Compute inverse
 Matrix Matrix::inverse() {
     if (rows != cols) {
-        throw std::runtime_error("Matrix must be square to compute its inverse.");
+        throw runtime_error("Matrix must be square to compute its inverse.");
     }
 
     int n = rows;
     Matrix result(n, n);
-    std::vector<std::vector<double>> augmented(n, std::vector<double>(2 * n));
+    vector<vector<double>> augmented(n, vector<double>(2 * n));
 
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
@@ -63,17 +63,17 @@ Matrix Matrix::inverse() {
     for (int i = 0; i < n; ++i) {
         int pivot = i;
         for (int k = i + 1; k < n; ++k) {
-            if (std::abs(augmented[k][i]) > std::abs(augmented[pivot][i])) {
+            if (abs(augmented[k][i]) > abs(augmented[pivot][i])) {
                 pivot = k;
             }
         }
 
         if (pivot != i) {
-            std::swap(augmented[i], augmented[pivot]);
+            swap(augmented[i], augmented[pivot]);
         }
 
-        if (std::abs(augmented[i][i]) < 1e-16) {
-            std::cout << "Adding epsilon to diagonal element at (" << i << ", " << i << ")\n";
+        if (abs(augmented[i][i]) < 1e-16) {
+            cout << "Adding epsilon to diagonal element at (" << i << ", " << i << ")\n";
             augmented[i][i] += 1e-16;
         }
 
@@ -105,9 +105,9 @@ Matrix Matrix::inverse() {
 void Matrix::display() const {
     for (const auto& row : mat) {
         for (double elem : row) {
-            std::cout << std::setw(10) << elem << " ";
+            cout << setw(10) << elem << " ";
         }
-        std::cout << std::endl;
+        cout << endl;
     }
 }
 
@@ -121,19 +121,19 @@ double Matrix::determinant() {
 }
 
 double Matrix::computeDeterminantGaussian() {
-    if (rows != cols) throw std::runtime_error("Matrix must be square to compute determinant.");
+    if (rows != cols) throw runtime_error("Matrix must be square to compute determinant.");
 
     double det = 1.0;
-    std::vector<std::vector<double>> tempMat = mat;
+    vector<vector<double>> tempMat = mat;
 
     for (int i = 0; i < rows; i++) {
         int pivot = i;
         for (int j = i + 1; j < rows; j++) {
-            if (std::abs(tempMat[j][i]) > std::abs(tempMat[pivot][i])) pivot = j;
+            if (abs(tempMat[j][i]) > abs(tempMat[pivot][i])) pivot = j;
         }
 
         if (pivot != i) {
-            std::swap(tempMat[i], tempMat[pivot]);
+            swap(tempMat[i], tempMat[pivot]);
             det *= -1;
         }
 
@@ -152,8 +152,8 @@ double Matrix::computeDeterminantGaussian() {
 }
 
 // Compute adjoint
-std::vector<std::vector<double>> Matrix::adjoint() {
-    std::vector<std::vector<double>> adj(rows, std::vector<double>(cols));
+vector<vector<double>> Matrix::adjoint() {
+    vector<vector<double>> adj(rows, vector<double>(cols));
 
     if (rows == 1) {
         adj[0][0] = 1;
@@ -164,7 +164,7 @@ std::vector<std::vector<double>> Matrix::adjoint() {
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            std::vector<std::vector<double>> subMatrix(n - 1, std::vector<double>(n - 1));
+            vector<vector<double>> subMatrix(n - 1, vector<double>(n - 1));
             int sub_i = 0;
             for (int row = 0; row < n; row++) {
                 if (row == i) continue;
@@ -194,7 +194,7 @@ std::vector<std::vector<double>> Matrix::adjoint() {
 // Operator overloads
 Matrix Matrix::operator*(const Matrix& other) const {
     if (cols != other.rows) {
-        throw std::runtime_error("Matrix size mismatch for multiplication.");
+        throw runtime_error("Matrix size mismatch for multiplication.");
     }
     Matrix result(rows, other.cols);
     for (int i = 0; i < rows; ++i) {
@@ -211,7 +211,7 @@ Matrix Matrix::operator*(const Matrix& other) const {
 
 Matrix Matrix::operator+(const Matrix& other) const {
     if (rows != other.rows || cols != other.cols) {
-        throw std::runtime_error("Matrix size mismatch for addition.");
+        throw runtime_error("Matrix size mismatch for addition.");
     }
 
     Matrix result(rows, cols);
