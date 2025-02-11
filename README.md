@@ -43,3 +43,7 @@ PDEpricer::computeMatrices()
 PDEpricer::solve()
 ```
 
+# Results
+
+All results and conclusion are documented in the pdf **CPP_PDE_Pricer.pdf**. Have a nice day and enjoy your reading :relaxed:!
+
