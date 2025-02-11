@@ -40,11 +40,12 @@ public:
     void display() const;
 
     double determinant();
-
     double computeDeterminantGaussian();        
     vector<vector<double>> adjoint();
+
     // Overloaded * operator for matrix multiplication
     Matrix operator*(const Matrix& other) const;
+    
     // Overloaded + operator for matrix addition
     Matrix operator+(const Matrix& other) const;
 };
